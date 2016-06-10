@@ -4,11 +4,13 @@ public abstract class AbstractNode implements Node {
     private int startIndex; 
     private int endIndex;
 
-    public int getStartIndex() {
+    @Override
+	public int getStartIndex() {
         return startIndex;
     }
 
-    public int getEndIndex() {
+    @Override
+	public int getEndIndex() {
         return endIndex;
     }
 

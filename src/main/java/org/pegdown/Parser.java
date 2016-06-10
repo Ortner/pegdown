@@ -59,7 +59,8 @@ public class Parser extends BaseParser<Object> implements Extensions {
 
     public static ParseRunnerProvider DefaultParseRunnerProvider =
             new Parser.ParseRunnerProvider() {
-                public ParseRunner<Node> get(Rule rule) {
+                @Override
+				public ParseRunner<Node> get(Rule rule) {
                     return new ReportingParseRunner<Node>(rule);
                 }
             };
@@ -401,7 +402,8 @@ public class Parser extends BaseParser<Object> implements Extensions {
     
     public Rule Definition() {
         SuperNodeCreator itemNodeCreator = new SuperNodeCreator() {
-            public SuperNode create(Node child) {
+            @Override
+			public SuperNode create(Node child) {
                 return new DefinitionNode(child);
             }
         };
@@ -418,11 +420,13 @@ public class Parser extends BaseParser<Object> implements Extensions {
         if (ext(TASKLISTITEMS)) {
             // #185 GFM style task list items [ ] open task, [x] closed task handlings
             SuperNodeTaskItemCreator itemNodeCreator = new SuperNodeTaskItemCreator() {
-                public SuperNode create(Node child) {
+                @Override
+				public SuperNode create(Node child) {
                     return new ListItemNode(child);
                 }
 
-                public SuperNode create(Node child, int taskType, String taskListMarker) {
+                @Override
+				public SuperNode create(Node child, int taskType, String taskListMarker) {
                     return taskType == 0 ? new ListItemNode(child) : new TaskListNode(child, taskType == 2, taskListMarker);
                 }
             };
@@ -436,7 +440,8 @@ public class Parser extends BaseParser<Object> implements Extensions {
             );
         } else {
             SuperNodeCreator itemNodeCreator = new SuperNodeCreator() {
-                public SuperNode create(Node child) {
+                @Override
+				public SuperNode create(Node child) {
                     return new ListItemNode(child);
                 }
             };
@@ -453,7 +458,8 @@ public class Parser extends BaseParser<Object> implements Extensions {
 
     public Rule OrderedList() {
         SuperNodeCreator itemNodeCreator = new SuperNodeCreator() {
-            public SuperNode create(Node child) {
+            @Override
+			public SuperNode create(Node child) {
                 return new ListItemNode(child);
             }
         };

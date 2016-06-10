@@ -35,11 +35,13 @@ public class SuperNode extends AbstractNode {
         this.children.addAll(children);
     }
 
-    public List<Node> getChildren() {
+    @Override
+	public List<Node> getChildren() {
         return children;
     }
 
-    public void accept(Visitor visitor) {
+    @Override
+	public void accept(Visitor visitor) {
         visitor.visit(this);
     }
     

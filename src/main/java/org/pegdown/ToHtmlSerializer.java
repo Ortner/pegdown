@@ -71,7 +71,8 @@ public class ToHtmlSerializer implements Visitor {
         return printer.getString();
     }
 
-    public void visit(RootNode node) {
+    @Override
+	public void visit(RootNode node) {
         for (ReferenceNode refNode : node.getReferences()) {
             visitChildren(refNode);
             references.put(normalize(printer.getString()), refNode);
@@ -89,66 +90,81 @@ public class ToHtmlSerializer implements Visitor {
         visitChildren(node);
     }
 
-    public void visit(AbbreviationNode node) {
+    @Override
+	public void visit(AbbreviationNode node) {
     }
 
-    public void visit(AnchorLinkNode node) {
+    @Override
+	public void visit(AnchorLinkNode node) {
         printLink(linkRenderer.render(node));
     }
 
-    public void visit(AutoLinkNode node) {
+    @Override
+	public void visit(AutoLinkNode node) {
         printLink(linkRenderer.render(node));
     }
 
-    public void visit(BlockQuoteNode node) {
+    @Override
+	public void visit(BlockQuoteNode node) {
         printIndentedTag(node, "blockquote");
     }
 
-    public void visit(BulletListNode node) {
+    @Override
+	public void visit(BulletListNode node) {
         printIndentedTag(node, "ul");
     }
 
-    public void visit(CodeNode node) {
+    @Override
+	public void visit(CodeNode node) {
         printTag(node, "code");
     }
 
-    public void visit(DefinitionListNode node) {
+    @Override
+	public void visit(DefinitionListNode node) {
         printIndentedTag(node, "dl");
     }
 
-    public void visit(DefinitionNode node) {
+    @Override
+	public void visit(DefinitionNode node) {
         printConditionallyIndentedTag(node, "dd");
     }
 
-    public void visit(DefinitionTermNode node) {
+    @Override
+	public void visit(DefinitionTermNode node) {
         printConditionallyIndentedTag(node, "dt");
     }
 
-    public void visit(ExpImageNode node) {
+    @Override
+	public void visit(ExpImageNode node) {
         String text = printChildrenToString(node);
         printImageTag(linkRenderer.render(node, text));
     }
 
-    public void visit(ExpLinkNode node) {
+    @Override
+	public void visit(ExpLinkNode node) {
         String text = printChildrenToString(node);
         printLink(linkRenderer.render(node, text));
     }
 
-    public void visit(HeaderNode node) {
+    @Override
+	public void visit(HeaderNode node) {
         printBreakBeforeTag(node, "h" + node.getLevel());
     }
 
-    public void visit(HtmlBlockNode node) {
+    @Override
+	public void visit(HtmlBlockNode node) {
         String text = node.getText();
         if (text.length() > 0) printer.println();
         printer.print(text);
     }
 
-    public void visit(InlineHtmlNode node) {
+    @Override
+	public void visit(InlineHtmlNode node) {
         printer.print(node.getText());
     }
 
-    public void visit(ListItemNode node) {
+    @Override
+	public void visit(ListItemNode node) {
         if (node instanceof TaskListNode) {
             // vsch: #185 handle GitHub style task list items, these are a bit messy because the <input> checkbox needs to be
             // included inside the optional <p></p> first grand-child of the list item, first child is always RootNode
@@ -178,19 +194,23 @@ public class ToHtmlSerializer implements Visitor {
         }
     }
 
-    public void visit(MailLinkNode node) {
+    @Override
+	public void visit(MailLinkNode node) {
         printLink(linkRenderer.render(node));
     }
 
-    public void visit(OrderedListNode node) {
+    @Override
+	public void visit(OrderedListNode node) {
         printIndentedTag(node, "ol");
     }
 
-    public void visit(ParaNode node) {
+    @Override
+	public void visit(ParaNode node) {
         printBreakBeforeTag(node, "p");
     }
 
-    public void visit(QuotedNode node) {
+    @Override
+	public void visit(QuotedNode node) {
         switch (node.getType()) {
             case DoubleAngle:
                 printer.print("&laquo;");
@@ -210,11 +230,13 @@ public class ToHtmlSerializer implements Visitor {
         }
     }
 
-    public void visit(ReferenceNode node) {
+    @Override
+	public void visit(ReferenceNode node) {
         // reference nodes are not printed
     }
 
-    public void visit(RefImageNode node) {
+    @Override
+	public void visit(RefImageNode node) {
         String text = printChildrenToString(node);
         String key = node.referenceKey != null ? printChildrenToString(node.referenceKey) : text;
         ReferenceNode refNode = references.get(normalize(key));
@@ -228,7 +250,8 @@ public class ToHtmlSerializer implements Visitor {
         } else printImageTag(linkRenderer.render(node, refNode.getUrl(), refNode.getTitle(), text));
     }
 
-    public void visit(RefLinkNode node) {
+    @Override
+	public void visit(RefLinkNode node) {
         String text = printChildrenToString(node);
         String key = node.referenceKey != null ? printChildrenToString(node.referenceKey) : text;
         ReferenceNode refNode = references.get(normalize(key));
@@ -242,7 +265,8 @@ public class ToHtmlSerializer implements Visitor {
         } else printLink(linkRenderer.render(node, refNode.getUrl(), refNode.getTitle(), text));
     }
 
-    public void visit(SimpleNode node) {
+    @Override
+	public void visit(SimpleNode node) {
         switch (node.getType()) {
             case Apostrophe:
                 printer.print("&rsquo;");
@@ -270,7 +294,8 @@ public class ToHtmlSerializer implements Visitor {
         }
     }
 
-    public void visit(StrongEmphSuperNode node) {
+    @Override
+	public void visit(StrongEmphSuperNode node) {
         if (node.isClosed()) {
             if (node.isStrong())
                 printTag(node, "strong");
@@ -283,11 +308,13 @@ public class ToHtmlSerializer implements Visitor {
         }
     }
 
-    public void visit(StrikeNode node) {
+    @Override
+	public void visit(StrikeNode node) {
         printTag(node, "del");
     }
 
-    public void visit(TableBodyNode node) {
+    @Override
+	public void visit(TableBodyNode node) {
         printIndentedTag(node, "tbody");
     }
 
@@ -298,7 +325,8 @@ public class ToHtmlSerializer implements Visitor {
         printer.print("</caption>");
     }
 
-    public void visit(TableCellNode node) {
+    @Override
+	public void visit(TableCellNode node) {
         String tag = inTableHeader ? "th" : "td";
         List<TableColumnNode> columns = currentTableNode.getColumns();
         TableColumnNode column = columns.get(Math.min(currentTableColumn, columns.size() - 1));
@@ -313,7 +341,8 @@ public class ToHtmlSerializer implements Visitor {
         currentTableColumn += node.getColSpan();
     }
 
-    public void visit(TableColumnNode node) {
+    @Override
+	public void visit(TableColumnNode node) {
         switch (node.getAlignment()) {
             case None:
                 break;
@@ -331,24 +360,28 @@ public class ToHtmlSerializer implements Visitor {
         }
     }
 
-    public void visit(TableHeaderNode node) {
+    @Override
+	public void visit(TableHeaderNode node) {
         inTableHeader = true;
         printIndentedTag(node, "thead");
         inTableHeader = false;
     }
 
-    public void visit(TableNode node) {
+    @Override
+	public void visit(TableNode node) {
         currentTableNode = node;
         printIndentedTag(node, "table");
         currentTableNode = null;
     }
 
-    public void visit(TableRowNode node) {
+    @Override
+	public void visit(TableRowNode node) {
         currentTableColumn = 0;
         printIndentedTag(node, "tr");
     }
 
-    public void visit(VerbatimNode node) {
+    @Override
+	public void visit(VerbatimNode node) {
         VerbatimSerializer serializer = lookupSerializer(node.getType());
         serializer.serialize(node, printer);
     }
@@ -361,11 +394,13 @@ public class ToHtmlSerializer implements Visitor {
         }
     }
 
-    public void visit(WikiLinkNode node) {
+    @Override
+	public void visit(WikiLinkNode node) {
         printLink(linkRenderer.render(node));
     }
 
-    public void visit(TextNode node) {
+    @Override
+	public void visit(TextNode node) {
         if (abbreviations.isEmpty()) {
             printer.print(node.getText());
         } else {
@@ -373,15 +408,18 @@ public class ToHtmlSerializer implements Visitor {
         }
     }
 
-    public void visit(SpecialTextNode node) {
+    @Override
+	public void visit(SpecialTextNode node) {
         printer.printEncoded(node.getText());
     }
 
-    public void visit(SuperNode node) {
+    @Override
+	public void visit(SuperNode node) {
         visitChildren(node);
     }
 
-    public void visit(Node node) {
+    @Override
+	public void visit(Node node) {
         for (ToHtmlSerializerPlugin plugin : plugins) {
             if (plugin.visit(node, this, printer)) {
                 return;

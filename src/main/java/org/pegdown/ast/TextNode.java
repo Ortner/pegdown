@@ -43,11 +43,13 @@ public class TextNode extends AbstractNode {
         return super.toString() + " '" + StringUtils.escape(getText()) + '\'';
     }
     
-    public List<Node> getChildren() {
+    @Override
+	public List<Node> getChildren() {
         return ImmutableList.of();
     }
     
-    public void accept(Visitor visitor) {
+    @Override
+	public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 }

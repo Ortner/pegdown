@@ -68,7 +68,8 @@ public class Benchmark {
         System.out.println("Parsing benchmark once more with ProfileParseRunner...");
         final Reference<ProfilingParseRunner<Node>> profilingRunner = new Reference<ProfilingParseRunner<Node>>();
         Parser parser = Parboiled.createParser(Parser.class, Extensions.NONE, new Parser.ParseRunnerProvider() {
-            public ParseRunner<Node> get(Rule rule) {
+            @Override
+			public ParseRunner<Node> get(Rule rule) {
                 if (profilingRunner.isNotSet()) profilingRunner.set(new ProfilingParseRunner<Node>(rule));
                 return profilingRunner.get();
             }

@@ -27,11 +27,13 @@ public class ValidEmphOrStrongCloseNode extends AbstractNode {
     public ValidEmphOrStrongCloseNode() {
     }
 
-    public List<Node> getChildren() {
+    @Override
+	public List<Node> getChildren() {
         return ImmutableList.of();
     }
     
-    public void accept(Visitor visitor) {
+    @Override
+	public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 }
