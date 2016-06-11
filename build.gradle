@@ -1,0 +1,104 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
+
+sourceCompatibility = 1.6
+version = '1.6'
+group = 'org.pegdown'
+
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'PegDown',
+                   'Implementation-Version': version
+    }
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+    maven {
+    url "https://repo1.maven.org/maven2"
+  }
+    
+}
+
+
+
+dependencies {
+    compile (
+    	[group: 'org.parboiled', name: 'parboiled-java', version: '1.1.7']
+    )
+    testCompile (
+    	[group: 'net.sf.jtidy', name: 'jtidy', version: 'r938'],
+    	[group: 'org.specs2', name: 'specs2-core_2.11', version: '2.4.16']
+    )
+}
+
+
+
+	task sourceJar(type: Jar) {
+		classifier "sources"
+	    from sourceSets.main.allSource
+	}
+
+	task docJar(type: Jar) {
+		dependsOn javadoc
+		classifier "javadoc"
+	    from javadoc.destinationDir
+	}
+	
+	task allJar(type: Jar){
+		dependsOn sourceJar, docJar, jar
+		classifier "all"
+	    from sourceSets.main.allSource, javadoc.destinationDir, sourceSets.main.output
+	}
+	
+//create a single Jar with all dependencies
+task fatJar(type: Jar) {
+	group = "java"
+	dependsOn classes
+   	classifier "fat"
+   	baseName = project.name + '-fat'
+   	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+   	with jar
+}
+	
+
+	publishing {
+		publications {
+			maven(MavenPublication) {
+				from components.java
+				artifact sourceJar
+				artifact docJar
+				artifact allJar
+				artifact fatJar
+				
+				pom.withXml{
+					Node n=asNode().appendNode("scm")
+					n.appendNode("url","git@github.com:sirthias/pegdown.git")
+					n.appendNode("connection","scm:git:git@github.com:sirthias/pegdown.git")
+					//developers
+					n=asNode().appendNode("developers")
+					n=n.appendNode("developer")
+					n.appendNode("id","sirthias")
+					n.appendNode("name","Mathias Doenitz")
+					//licences
+					Node lic=asNode().appendNode("licenses")
+					n=lic.appendNode("license")
+					n.appendNode("name","Apache License 2.0")
+					n.appendNode("url","http://www.apache.org/licenses/LICENSE-2.0")
+					n.appendNode("distribution","repo")
+					n.appendNode("comments","Applies to all PegDown products")
+					//fat jar
+					n=lic.appendNode("license")
+					n.appendNode("name","OW2 License")
+					n.appendNode("url","http://asm.ow2.org/license.html")
+					n.appendNode("distribution","repo")
+					n.appendNode("comments","The -fat library repacks dependent libraries. This additional license applies only to specific parts of the product.")
+					
+				}
+			}
+		}
+	}
+

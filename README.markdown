@@ -76,6 +76,16 @@ concurrent accesses, since neither the [PegDownProcessor] nor the underlying par
 
 See <http://sirthias.github.com/pegdown/api> for the pegdown API documentation.
 
+Command Line Interface
+----------------------
+
+Running _pegdown_ from the command line is pretty easy as well. Download the `-fat` jar file from the link given in the Installation instructions. And run:
+
+`> java -jar pegdown-<version>-fat.jar`
+
+The command line options will be printed to the console.
+
+
 
 Plugins
 -------

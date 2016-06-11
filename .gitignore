@@ -34,3 +34,9 @@ out/
 
 # Other
 *.pyc
+
+#Eclipse
+/bin/
+
+#Gradle
+.gradle
